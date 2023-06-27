@@ -119,3 +119,128 @@ you can use them if needed
 
 //output : linux /home/thexro
 ```
+## File System
+
+**Reading files**
+
+Ability to read files from the filesystem using the fs module is a fundamental part of Node.js. and can't be done in the browser
+
+For this we use one of the core module in js called **fs** module.
+
+ hello.txt contents👇👇👇 
+
+```
+hello my name is thexro
+```
+
+```jsx
+const fs = require('fs');
+
+fs.readFile('hello.txt', (err, data) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log(data.tostring()); //using tostring() as we get the data in buffer
+});
+
+//output : hello my name is thexro
+```
+
+**Writing files**
+
+if overwrites the contents of the file 
+
+```
+//writing files
+
+fs.writeFile('hello.txt', 'Hello World!', (err) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log('File written!');
+}
+);
+```
+
+if a file doesn’t exist it will create a new file
+
+**Directories**
+
+```jsx
+//directories
+fs.mkdir('tutorial', (err) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log('Folder created!');
+}
+);
+```
+
+the above function will give error if the folder already exist so we use `existsSync`
+
+```jsx
+if (!fs.existsSync('./tutorial')) {
+    fs.mkdir('tutorial', (err) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('Folder created!');
+    });
+}
+```
+
+### Deleting files
+
+to delete a file we use `fs.unlink` method
+
+Sample code to delete a file named `deleteme` 
+
+```jsx
+//deleting files
+if (fs.existsSync('deleteme')) {
+    fs.unlink('deleteme', (err) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('File deleted!');
+    }
+    );
+}
+```
+
+### Streams
+
+Start using the data before it has finished loading.
+
+For example we could wait for the data to fully loaded or we just load small amounts of data at a time without waiting.
+
+**Read and Write streams** 
+
+```jsx
+const fs = require('fs');
+
+const readStream = fs.createReadStream('./example.txt' , { encoding : 'utf8' });
+const writeStream = fs.createWriteStream('example2.txt');
+readStream.on('data', (chunk) => {
+    console.log('New chunk received:');
+    console.log(chunk);
+    writeStream.write('\nNew chunk received:\n');
+    writeStream.write(chunk);
+}   
+);
+```
+
+the above code creates a readstream and a writeStream into a new file
+
+### Piping
+
+Doing above thing but less code
+
+```jsx
+const fs = require('fs');
+
+const readStream = fs.createReadStream('./example.txt' , { encoding : 'utf8' });
+const writeStream = fs.createWriteStream('example2.txt');
+
+readStream.pipe(writeStream);
