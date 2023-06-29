@@ -244,3 +244,118 @@ const readStream = fs.createReadStream('./example.txt' , { encoding : 'utf8' });
 const writeStream = fs.createWriteStream('example2.txt');
 
 readStream.pipe(writeStream);
+
+# Module
+
+```jsx
+
+```
+
+encapsulated code only sharing minimum 
+
+# Communication between server and browser
+
+first browsers sends a request and the servers looks the requests and decide what to send back
+
+it could be html page, images , json etc 
+
+How does browsers know which to send request to 
+
+for this lets look on ip addresses 
+
+i we want to connect to a server we need a ip address of the server 
+
+we use domain name as ip address are complex to learn
+
+## GET Requests
+
+when the browsers send request to the server when we type domain name and hit enter we are sending a GET request that will give something back
+
+the communication occurs via HTTP 
+
+## Creating a server
+
+For creating a server we use http module 
+
+```jsx
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+	console.log("Request Made");
+}
+);
+
+server.listen(3000);
+
+```
+
+The request object
+
+## The Request Object
+
+It contains loads of stuff like url `req.url`, method used `req.method`  etc.
+
+```jsx
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    //set header content type
+    res.setHeader('Content-Type', 'text/plain');
+    res.write('Hello World');
+    res.end();
+
+}
+);
+
+server.listen(3000 , () => {console.log('listening on port 3000');});
+
+```
+
+we can use html also 👇👇👇
+
+```jsx
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    //set header content type
+    res.setHeader('Content-Type', 'text/html');
+    res.write('<h1>Hello World</h1>');
+    res.end();
+}
+);
+
+server.listen(3000 , () => {console.log('listening on port 3000');});
+```
+
+the browser will automatically make the body head tags
+
+but this is not the ideal way to send html
+
+the best way is to make separate files and use the fs module
+
+```jsx
+const http = require('http');
+const fs = require('fs');
+
+const server = http.createServer((req, res) => {
+    //set header content type
+    res.setHeader('Content-Type', 'text/html');
+
+    //send a html file
+    fs.readFile('./views/index.html', (err, data) => {
+        if(err){
+            console.log(err);
+            res.end();
+        }else{
+            // res.write(data);
+            // res.end();
+            //or as one one thing is being sent we can use end
+            res.end(data);
+        }
+    })
+})
+;
+
+server.listen(3000 , () => {console.log('listening on port 3000');});
+```
